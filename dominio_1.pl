@@ -29,8 +29,7 @@ initialize :-
     assert(occupata(pos(7,7), pedone_nero_2)),
     % assert(occupata(pos(7,8), pedone_nero_3)),
     assert(occupata(pos(6,8), pedone_bianco_1)),
-    % assert(occupata(pos(1,1), pedone_bianco_2)),
-    assert(occupata(pos(7,6), pedone_bianco_2)),
+    assert(occupata(pos(6,5), pedone_bianco_2)),
     assert(occupata(pos(1,5), torre_bianco)),
     assert(occupata(pos(1,6), re_bianco)).
 

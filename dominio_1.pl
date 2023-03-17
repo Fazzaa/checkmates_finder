@@ -24,7 +24,7 @@ occupata(pos(8,7), re_nero).
 occupata(pos(7,6), pedone_nero_1).
 occupata(pos(7,7), pedone_nero_2).
 occupata(pos(7,8), pedone_nero_3).
-occupata(pos(1,1), pedone_bianco_1).
+occupata(pos(6,8), pedone_bianco_1).
 
 occupata(pos(1,5), torre_bianco).
 occupata(pos(1,6), re_bianco).

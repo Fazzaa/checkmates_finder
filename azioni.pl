@@ -34,7 +34,7 @@ applicabile(continua, Torre, pos(Riga, Colonna), N) :-
     N = 0, !. % cut per bloccare esecuzione di applicabile successivo quando questo restituisce true.
 
 applicabile(continua, Torre, pos(Riga, Colonna), N) :-
-    N > 0, % posso muovermi al massimo di N volte
+    % N > 0, % posso muovermi al massimo di N volte
     Riga < 8,
     RigaSopra is Riga + 1,
     \+ occupata(pos(RigaSopra, Colonna), _),
@@ -66,9 +66,11 @@ trasforma(su, Torre, pos(Riga, Colonna)) :-
     assert(occupata(pos(RigaSopra, Colonna), Torre)),
     retract(occupata(pos(Riga, Colonna), Torre)).
 
+trasforma(continua, Torre, pos(Riga, Colonna), N) :-
+    N = 0, !.
+
 trasforma(continua ,Torre, pos(Riga, Colonna), N) :-
     RigaSopra is Riga+1,
-    N > 0,
     assert(occupata(pos(RigaSopra, Colonna), Torre)),
     retract(occupata(pos(Riga, Colonna), Torre)),
     NNuovo is N - 1,

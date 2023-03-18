@@ -38,6 +38,8 @@ applicabile(continua, Torre, pos(Riga, Colonna), N) :-
     Riga < 8,
     RigaSopra is Riga + 1,
     \+ occupata(pos(RigaSopra, Colonna), _),
+    occupata(pos(Riga, Colonna), Torre),
+    trasforma(su, Torre, pos(Riga, Colonna)),
     NNuovo is N-1,
     write('Posizione Controllata Attuale '), write(Riga), write('-'), write(Colonna), write('\n'),
     applicabile(continua, Torre, pos(RigaSopra, Colonna), NNuovo).
@@ -69,7 +71,7 @@ trasforma(su, Torre, pos(Riga, Colonna)) :-
 trasforma(continua, Torre, pos(Riga, Colonna), N) :-
     N = 0, !.
 
-trasforma(continua ,Torre, pos(Riga, Colonna), N) :-
+trasforma(continua ,Torre, pos(Riga, Colonna), N) :- %! inutile per come è studiata ora, per farlo funzionare sto chiamando trasforma dentro applicabile. Discuterne insieme che logicamente non è quello che a fatto lui a lezione.
     RigaSopra is Riga+1,
     assert(occupata(pos(RigaSopra, Colonna), Torre)),
     retract(occupata(pos(Riga, Colonna), Torre)),

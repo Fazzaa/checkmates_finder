@@ -37,7 +37,7 @@ initialize :-
     assert(occupata(pos(1,5), re_bianco)).
 
 %checkmate(pos(8,5), torreBianco)%
-checkmate(X,Y) :- 
+checkmate(X,_) :- 
     check, 
     \+mangiabile(X), 
     \+move(reNero), 

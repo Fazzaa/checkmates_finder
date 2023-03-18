@@ -23,6 +23,22 @@ applicabile(mangiasx, Pedone, pos(Riga, Colonna)) :-
     nero(X),
     occupata(pos(RigaSopra, ColonnaSx), X).
 
+applicabile(su, Torre, pos(Riga, Colonna)) :-
+    Riga < 8,
+    torre(Torre),
+    RigaSopra is Riga + 1,
+    occupata(pos(Riga, Colonna), Torre),
+    \+ occupata(pos(RigaSopra, Colonna), _).
+
+applicabile(continua, Torre, pos(Riga, Colonna), N) :-
+    N > 0, % posso muovermi al massimo di N volte
+    Riga < 8,
+    RigaSopra is Riga + 1,
+    \+ occupata(pos(RigaSopra, Colonna), Torre),
+    NNuovo is N-1,
+    write('Posizione Controllata Attuale '), write(Riga), write('-'), write(Colonna), write('\n'),
+    applicabile(continua, Torre, pos(RigaSopra, Colonna), NNuovo).
+
 trasforma(su, Pedone, pos(Riga, Colonna)) :-
     RigaSopra is Riga + 1,
     assert(occupata(pos(RigaSopra, Colonna), Pedone)),

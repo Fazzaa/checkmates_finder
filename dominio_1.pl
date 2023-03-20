@@ -10,11 +10,13 @@ pedone(pedone_bianco_2).
 re(re_nero).
 re(re_bianco).
 torre(torre_bianco).
+torre(torre_bianco_2).
 
 
 bianco(pedone_bianco_1).
 bianco(pedone_bianco_2).
 bianco(torre_bianco).
+bianco(torre_bianco_2).
 bianco(re_bianco).
 
 
@@ -34,6 +36,7 @@ initialize :-
     assert(occupata(pos(6,8), pedone_bianco_1)),
     assert(occupata(pos(2,5), pedone_bianco_2)),
     assert(occupata(pos(1,1), torre_bianco)),
+    assert(occupata(pos(1,2), torre_bianco_2)),
     assert(occupata(pos(1,5), re_bianco)).
 
 
@@ -44,35 +47,31 @@ checkmate(X,_) :-
     \+move(reNero), 
     \+opposizione().
 
-check_pawn_right :-
+check(Pezzo):-
+    pedone(Pezzo),
     occupata(pos(RigaRe, ColonnaRe), re_nero),
     RigaPedone is RigaRe-1,
     ColonnaPedone is ColonnaRe +1,
-    pedone(Pedone),
-    bianco(Pedone),
-    occupata(pos(RigaPedone, ColonnaPedone), Pedone).
+    occupata(pos(RigaPedone, ColonnaPedone), Pezzo).
 
-check_pawn_left :-
+check(Pezzo):-
+    pedone(Pezzo),
     occupata(pos(RigaRe, ColonnaRe), re_nero),
     RigaPedone is RigaRe-1,
     ColonnaPedone is ColonnaRe -1,
-    pedone(Pedone),
-    bianco(Pedone),
-    occupata(pos(RigaPedone, ColonnaPedone), Pedone).
+    occupata(pos(RigaPedone, ColonnaPedone), Pezzo).
 
 
-check_rook_row :-
+check(Pezzo):-
+    torre(Pezzo),
     occupata(pos(RigaRe, ColonnaRe), re_nero),
-    torre(Torre),
-    bianco(Torre),
-    occupata(pos(RigaRe, ColonnaTorre), Torre),
+    occupata(pos(RigaRe, ColonnaTorre), Pezzo),
     N is (ColonnaRe-1)-ColonnaTorre,
-    applicabile(dx, Torre, pos(RigaRe, ColonnaTorre), N).
+    applicabile(dx, Pezzo, pos(RigaRe, ColonnaTorre), N).
 
-check_rook_col :-
+check(Pezzo) :-
+    torre(Pezzo),
     occupata(pos(RigaRe, ColonnaRe), re_nero),
-    torre(Torre),
-    bianco(Torre),
-    occupata(pos(RigaTorre, ColonnaRe), Torre),
+    occupata(pos(RigaTorre, ColonnaRe), Pezzo),
     N is (RigaRe-1)-RigaTorre,
-    applicabile(su, Torre, pos(RigaTorre, ColonnaRe), N).
+    applicabile(su, Pezzo, pos(RigaTorre, ColonnaRe), N).

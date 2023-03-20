@@ -23,23 +23,65 @@ applicabile(mangiasx, Pedone, pos(Riga, Colonna)) :-
     nero(X),
     occupata(pos(RigaSopra, ColonnaSx), X).
 
+%Controllo se la torre può spostarsi a destra di N caselle, utilizzo 
+%il metodo continua_riga per controllare ricorsivamente se le righe sono occupate
 applicabile(su, Torre, pos(Riga, Colonna), N) :-
     Riga < 8,
     torre(Torre),
     occupata(pos(Riga, Colonna), Torre),
-    continua(Torre, pos(Riga, Colonna), N).
+    continua_riga(Torre, pos(Riga, Colonna), N).
 
-continua(_, pos(_, _), N) :-
+%Controllo se la torre può spostarsi a destra di N caselle, utilizzo 
+%il metodo continua_colonna_dx per controllare ricorsivamente se le colonne sono occupate
+applicabile(dx, Torre, pos(Riga, Colonna), N) :-
+    Colonna < 8,
+    torre(Torre),
+    occupata(pos(Riga, Colonna), Torre),
+    continua_colonna_dx(Torre, pos(Riga, Colonna), N).
+
+%Esattamente come sopra, solo che controllo a sx. Mi disturba avere un metodo
+%continua_colonna diverso, ma per ora mi è sembrato necessario%
+applicabile(sx, Torre, pos(Riga, Colonna), N) :-
+    Colonna > 1 ,
+    torre(Torre),
+    occupata(pos(Riga, Colonna), Torre),
+    continua_colonna_sx(Torre, pos(Riga, Colonna), N).
+
+continua_colonna_sx(_, pos(_, _), N) :-
+    N = 0, !.
+
+continua_colonna_sx(Torre, pos(Riga, Colonna), N) :-
+    % N > 0, % posso muovermi al massimo di N volte
+    Colonna > 1,
+    ColonnaSx is Colonna - 1,
+    \+ occupata(pos(Riga, ColonnaSx), _),
+    NNuovo is N-1,
+    write('Posizione Controllata Attuale '), write(Riga), write('-'), write(ColonnaSx), write('\n'),
+    continua_colonna_sx(Torre, pos(Riga, ColonnaSx), NNuovo).
+
+continua_colonna_dx(_, pos(_, _), N) :-
+    N = 0, !.
+
+continua_colonna_dx(Torre, pos(Riga, Colonna), N) :-
+    % N > 0, % posso muovermi al massimo di N volte
+    Colonna < 8,
+    ColonnaDx is Colonna + 1,
+    \+ occupata(pos(Riga, ColonnaDx), _),
+    NNuovo is N-1,
+    write('Posizione Controllata Attuale '), write(Riga), write('-'), write(ColonnaDx), write('\n'),
+    continua_colonna_dx(Torre, pos(Riga, ColonnaDx), NNuovo).
+
+continua_riga(_, pos(_, _), N) :-
     N = 0, !. % cut per bloccare esecuzione di applicabile successivo quando questo restituisce true.
 
-continua(Torre, pos(Riga, Colonna), N) :-
+continua_riga(Torre, pos(Riga, Colonna), N) :-
     % N > 0, % posso muovermi al massimo di N volte
     Riga < 8,
     RigaSopra is Riga + 1,
     \+ occupata(pos(RigaSopra, Colonna), _),
     NNuovo is N-1,
-    write('Posizione Controllata Attuale '), write(Riga), write('-'), write(Colonna), write('\n'),
-    continua(Torre, pos(RigaSopra, Colonna), NNuovo).
+    write('Posizione Controllata Attuale '), write(RigaSopra), write('-'), write(Colonna), write('\n'),
+    continua_riga(Torre, pos(RigaSopra, Colonna), NNuovo).
 
 trasforma(mangiadx, Pedone, pos(Riga, Colonna)) :-
     RigaSopra is Riga + 1,
@@ -55,12 +97,15 @@ trasforma(mangiasx, Pedone, pos(Riga, Colonna)) :-
     assert(occupata(pos(RigaSopra, ColonnaSx), Pedone)),
     retract(occupata(pos(Riga, Colonna), Pedone)).
 
-trasforma(su, _, pos(_, _), N) :-
-    N = 0, !.
-
+%*Movimento in su di N caselle%
 trasforma(su ,Torre, pos(Riga, Colonna), N) :-
-    RigaSopra is Riga+1,
+    RigaSopra is Riga+N,
     assert(occupata(pos(RigaSopra, Colonna), Torre)),
-    retract(occupata(pos(Riga, Colonna), Torre)),
-    NNuovo is N - 1,
-    trasforma(su, Torre, pos(RigaSopra, Colonna), NNuovo).
+    retract(occupata(pos(Riga, Colonna), Torre)).
+
+%*Movimento a destra di N caselle
+trasforma(dx ,Torre, pos(Riga, Colonna), N) :-
+    ColonnaDx is Colonna+N,
+    assert(occupata(pos(Riga, ColonnaDx), Torre)),
+    retract(occupata(pos(Riga, Colonna), Torre)).    
+

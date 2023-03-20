@@ -1,12 +1,16 @@
-applicabile(su, Pedone, pos(Riga, Colonna)) :-
+applicabile(su, Pedone, pos(Riga, Colonna), N) :-
+    N=1,
     Riga < 8,
+    pedone(Pedone),
     bianco(Pedone),
     RigaSopra is Riga + 1,
     occupata(pos(Riga, Colonna), Pedone),
     \+ occupata(pos(RigaSopra, Colonna), _).
 
-applicabile(mangiadx, Pedone, pos(Riga, Colonna)) :-
+applicabile(mangiadx, Pedone, pos(Riga, Colonna),N) :-
+    N=1,
     Riga < 8,
+    pedone(Pedone),
     bianco(Pedone),
     occupata(pos(Riga, Colonna), Pedone),
     RigaSopra is Riga + 1,
@@ -14,8 +18,10 @@ applicabile(mangiadx, Pedone, pos(Riga, Colonna)) :-
     nero(X),
     occupata(pos(RigaSopra, ColonnaDx), X).
 
-applicabile(mangiasx, Pedone, pos(Riga, Colonna)) :-
+applicabile(mangiasx, Pedone, pos(Riga, Colonna), N) :-
+    N=1,
     Riga < 8,
+    pedone(Pedone),
     bianco(Pedone),
     occupata(pos(Riga, Colonna), Pedone),
     RigaSopra is Riga + 1,
@@ -51,7 +57,6 @@ continua_colonna_sx(_, pos(_, _), N) :-
     N = 0, !.
 
 continua_colonna_sx(Torre, pos(Riga, Colonna), N) :-
-    % N > 0, % posso muovermi al massimo di N volte
     Colonna > 1,
     ColonnaSx is Colonna - 1,
     \+ occupata(pos(Riga, ColonnaSx), _),
@@ -62,7 +67,6 @@ continua_colonna_dx(_, pos(_, _), N) :-
     N = 0, !.
 
 continua_colonna_dx(Torre, pos(Riga, Colonna), N) :-
-    % N > 0, % posso muovermi al massimo di N volte
     Colonna < 8,
     ColonnaDx is Colonna + 1,
     \+ occupata(pos(Riga, ColonnaDx), _),
@@ -79,28 +83,38 @@ continua_riga(Torre, pos(Riga, Colonna), N) :-
     NNuovo is N-1,
     continua_riga(Torre, pos(RigaSopra, Colonna), NNuovo).
 
-trasforma(mangiadx, Pedone, pos(Riga, Colonna)) :-
-    RigaSopra is Riga + 1,
-    ColonnaDx is Colonna + 1,
+trasforma(mangiadx, Pedone, pos(Riga, Colonna),N) :-
+    pedone(Pedone),
+    RigaSopra is Riga + N,
+    ColonnaDx is Colonna + N,
     retract(occupata(pos(RigaSopra, ColonnaDx), _)),
     assert(occupata(pos(RigaSopra, ColonnaDx), Pedone)),
     retract(occupata(pos(Riga, Colonna), Pedone)).
 
-trasforma(mangiasx, Pedone, pos(Riga, Colonna)) :-
-    RigaSopra is Riga + 1,
-    ColonnaSx is Colonna - 1,
+trasforma(mangiasx, Pedone, pos(Riga, Colonna),N) :-
+    pedone(Pedone),
+    RigaSopra is Riga + N,
+    ColonnaSx is Colonna - N,
     retract(occupata(pos(RigaSopra, ColonnaSx), _)),
     assert(occupata(pos(RigaSopra, ColonnaSx), Pedone)),
     retract(occupata(pos(Riga, Colonna), Pedone)).
 
+trasforma(su, Pedone, pos(Riga, Colonna),N) :-
+    pedone(Pedone),
+    RigaSopra is Riga + 1,
+    retract(occupata(pos(Riga, Colonna), Pedone)),
+    assert(occupata(pos(RigaSopra, Colonna), Pedone)).
+
 %*Movimento in su di N caselle%
 trasforma(su ,Torre, pos(Riga, Colonna), N) :-
+    torre(Torre),
     RigaSopra is Riga+N,
     assert(occupata(pos(RigaSopra, Colonna), Torre)),
     retract(occupata(pos(Riga, Colonna), Torre)).
 
 %*Movimento a destra di N caselle
 trasforma(dx ,Torre, pos(Riga, Colonna), N) :-
+    torre(Torre),
     ColonnaDx is Colonna+N,
     assert(occupata(pos(Riga, ColonnaDx), Torre)),
     retract(occupata(pos(Riga, Colonna), Torre)).    

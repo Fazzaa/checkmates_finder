@@ -56,7 +56,6 @@ continua_colonna_sx(Torre, pos(Riga, Colonna), N) :-
     ColonnaSx is Colonna - 1,
     \+ occupata(pos(Riga, ColonnaSx), _),
     NNuovo is N-1,
-    write('Posizione Controllata Attuale '), write(Riga), write('-'), write(ColonnaSx), write('\n'),
     continua_colonna_sx(Torre, pos(Riga, ColonnaSx), NNuovo).
 
 continua_colonna_dx(_, pos(_, _), N) :-
@@ -68,19 +67,16 @@ continua_colonna_dx(Torre, pos(Riga, Colonna), N) :-
     ColonnaDx is Colonna + 1,
     \+ occupata(pos(Riga, ColonnaDx), _),
     NNuovo is N-1,
-    write('Posizione Controllata Attuale '), write(Riga), write('-'), write(ColonnaDx), write('\n'),
     continua_colonna_dx(Torre, pos(Riga, ColonnaDx), NNuovo).
 
 continua_riga(_, pos(_, _), N) :-
     N = 0, !. % cut per bloccare esecuzione di applicabile successivo quando questo restituisce true.
 
 continua_riga(Torre, pos(Riga, Colonna), N) :-
-    % N > 0, % posso muovermi al massimo di N volte
     Riga < 8,
     RigaSopra is Riga + 1,
     \+ occupata(pos(RigaSopra, Colonna), _),
     NNuovo is N-1,
-    write('Posizione Controllata Attuale '), write(RigaSopra), write('-'), write(Colonna), write('\n'),
     continua_riga(Torre, pos(RigaSopra, Colonna), NNuovo).
 
 trasforma(mangiadx, Pedone, pos(Riga, Colonna)) :-

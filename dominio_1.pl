@@ -68,9 +68,6 @@ check_rook_row :-
     occupata(pos(RigaRe, ColonnaTorre), Torre),
     N is (ColonnaRe-1)-ColonnaTorre,
     applicabile(dx, Torre, pos(RigaRe, ColonnaTorre), N).
-    %ColonnaAfterTorre is ColonnaTorre + 1,
-    %ColonnaBeforeRe is ColonnaRe - 1,
-    %riga_occupata(pos(RigaRe, ColonnaAfterTorre), pos(RigaRe, ColonnaBeforeRe)).    
 
 check_rook_col :-
     occupata(pos(RigaRe, ColonnaRe), re_nero),
@@ -79,6 +76,3 @@ check_rook_col :-
     occupata(pos(RigaTorre, ColonnaRe), Torre),
     N is (RigaRe-1)-RigaTorre,
     applicabile(su, Torre, pos(RigaTorre, ColonnaRe), N).
-    %RigaAfterTorre is RigaTorre + 1,
-    %RigaBeforeRe is RigaRe - 1,
-    %colonna_occupata(pos(RigaAfterTorre, ColonnaRe), pos(RigaBeforeRe, ColonnaRe)).

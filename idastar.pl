@@ -15,5 +15,7 @@ risolvi(N):-
     check(Pezzo),
     %length(Az, L),
     %write(L)
-    write(Az),write("---"), write(Pezzo),write("---"), write(N), write("\n").
+    write(Az),write("---"), write(Pezzo),write("---"), write(N), write("\n"),
+    read(String),
+    String.
 

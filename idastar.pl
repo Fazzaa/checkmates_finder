@@ -15,7 +15,7 @@ risolvi_bianco(N):-
     check(Pezzo),
     %length(Az, L),
     %write(L)
-    write(Az),write("---"), write(Pezzo),write("---"), write(N), write("\n"), !.
+    write(Az),write("---"), write(Pezzo),write("---"), write(N), write("\n"), !. % usa la prima mossa trovata che dà scacco
     %read(String),
     %String.
 

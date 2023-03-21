@@ -1,3 +1,4 @@
+%* Pedone Bianco
 applicabile(su, Pedone, pos(Riga, Colonna), N) :-
     N=1,
     Riga < 8,
@@ -29,6 +30,40 @@ applicabile(mangiasx, Pedone, pos(Riga, Colonna), N) :-
     nero(X),
     occupata(pos(RigaSopra, ColonnaSx), X).
 
+%* Re Nero
+applicabile(su, Re, pos(Riga, Colonna), _) :-
+    Riga < 8,
+    re(Re),
+    nero(Re),
+    RigaSopra is Riga + 1,
+    occupata(pos(Riga, Colonna), Re),
+    \+ occupata(pos(RigaSopra, Colonna), _).
+
+applicabile(giu, Re, pos(Riga, Colonna), _) :-
+    Riga > 1,
+    re(Re),
+    nero(Re),
+    RigaSotto is Riga - 1,
+    occupata(pos(Riga, Colonna), Re),
+    \+ occupata(pos(RigaSotto, Colonna), _).
+
+applicabile(dx, Re, pos(Riga, Colonna), _) :-
+    Colonna < 8,
+    re(Re),
+    nero(Re),
+    ColonnaDestra is Colonna + 1,
+    occupata(pos(Riga, Colonna), Re),
+    \+ occupata(pos(Riga, ColonnaDestra), _).
+
+applicabile(sx, Re, pos(Riga, Colonna), _) :-
+    Colonna > 1,
+    re(Re),
+    nero(Re),
+    ColonnaSinistra is Colonna - 1,
+    occupata(pos(Riga, Colonna), Re),
+    \+ occupata(pos(Riga, ColonnaSinistra), _).
+
+%* Torre
 %Controllo se la torre può spostarsi a destra di N caselle, utilizzo 
 %il metodo continua_riga per controllare ricorsivamente se le righe sono occupate
 applicabile(su, Torre, pos(Riga, Colonna), N) :-
@@ -83,6 +118,7 @@ continua_riga(Torre, pos(Riga, Colonna), N) :-
     NNuovo is N-1,
     continua_riga(Torre, pos(RigaSopra, Colonna), NNuovo).
 
+%* Pedone
 trasforma(mangiadx, Pedone, pos(Riga, Colonna),N) :-
     pedone(Pedone),
     RigaSopra is Riga + N,
@@ -99,23 +135,53 @@ trasforma(mangiasx, Pedone, pos(Riga, Colonna),N) :-
     assert(occupata(pos(RigaSopra, ColonnaSx), Pedone)),
     retract(occupata(pos(Riga, Colonna), Pedone)).
 
-trasforma(su, Pedone, pos(Riga, Colonna),N) :-
+trasforma(su, Pedone, pos(Riga, Colonna),_) :-
     pedone(Pedone),
     RigaSopra is Riga + 1,
     retract(occupata(pos(Riga, Colonna), Pedone)),
     assert(occupata(pos(RigaSopra, Colonna), Pedone)).
 
-%*Movimento in su di N caselle%
+%* Torre
+%Movimento in su di N caselle
 trasforma(su ,Torre, pos(Riga, Colonna), N) :-
     torre(Torre),
     RigaSopra is Riga+N,
     assert(occupata(pos(RigaSopra, Colonna), Torre)),
     retract(occupata(pos(Riga, Colonna), Torre)).
 
-%*Movimento a destra di N caselle
+%Movimento a destra di N caselle
 trasforma(dx ,Torre, pos(Riga, Colonna), N) :-
     torre(Torre),
     ColonnaDx is Colonna+N,
     assert(occupata(pos(Riga, ColonnaDx), Torre)),
     retract(occupata(pos(Riga, Colonna), Torre)).    
 
+%* Re Nero
+trasforma(su, Re, pos(Riga, Colonna), _) :-
+    re(Re),
+    nero(Re),
+    RigaSopra is Riga + 1,
+    retract(occupata(pos(Riga, Colonna), Re)),
+    assert(occupata(pos(RigaSopra, Colonna), Re)).
+
+trasforma(giu, Re, pos(Riga, Colonna), _) :-
+    re(Re),
+    nero(Re),
+    RigaSotto is Riga - 1,
+    retract(occupata(pos(Riga, Colonna), Re)),
+    assert(occupata(pos(RigaSotto, Colonna), Re)).
+
+trasforma(destra, Re, pos(Riga, Colonna), _) :-
+    re(Re),
+    nero(Re),
+    ColonnaDestra is Colonna + 1,
+    retract(occupata(pos(Riga, Colonna), Re)),
+    assert(occupata(pos(Riga, ColonnaDestra), Re)).
+
+trasforma(sinistra, Re, pos(Riga, Colonna), _) :-
+    re(Re),
+    nero(Re),
+    ColonnaSinistra is Colonna - 1,
+    retract(occupata(pos(Riga, Colonna), Re)),
+    assert(occupata(pos(Riga, ColonnaSinistra), Re)).
+    

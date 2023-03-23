@@ -4,6 +4,7 @@ prova_bianco(N):-
 prova_bianco(N):-
     NNuovo is N+1,
     NNuovo<8,
+    
     prova_bianco(NNuovo).
 
 risolvi_bianco(N):-
@@ -13,6 +14,7 @@ risolvi_bianco(N):-
     applicabile(Az, Pezzo, pos(X,Y), N),
     trasforma(Az, Pezzo, pos(X,Y), N),
     check(Pezzo),
+    %retract(occupata, Pezzo)
     %length(Az, L),
     %write(L)
     write(Az),write("---"), write(Pezzo),write("---"), write(N), write("\n"), !. % usa la prima mossa trovata che dà scacco
@@ -34,5 +36,6 @@ risolvi_nero(N) :-
     occupata(pos(X,Y), Pezzo),
     applicabile(Az, Pezzo, pos(X,Y), N),
     trasforma(Az, Pezzo, pos(X,Y), N),
-    \+check(torre_bianco),
-    write(Az),write("---"), write(N), write("---"), write("no more check motherfuckers").
+    bianco(PezzoBianco),
+    \+check(PezzoBianco), %pezzoBianco
+    write(Az),write("---"), write(N), write("---"), write("no check motherfuckers").

@@ -1,65 +1,67 @@
 %* Pedone Bianco
 applicabile(su, Pedone, pos(Riga, Colonna), N) :-
+    pedone(Pedone),
     N=1,
     Riga < 8,
-    pedone(Pedone),
-    bianco(Pedone),
     RigaSopra is Riga + 1,
-    occupata(pos(Riga, Colonna), Pedone),
     \+ occupata(pos(RigaSopra, Colonna), _).
 
 applicabile(mangiadx, Pedone, pos(Riga, Colonna),N) :-
+    pedone(Pedone),
     N=1,
     Riga < 8,
-    pedone(Pedone),
-    bianco(Pedone),
-    occupata(pos(Riga, Colonna), Pedone),
     RigaSopra is Riga + 1,
     ColonnaDx is Colonna + 1,
     nero(X),
     occupata(pos(RigaSopra, ColonnaDx), X).
 
 applicabile(mangiasx, Pedone, pos(Riga, Colonna), N) :-
+    pedone(Pedone),
     N=1,
     Riga < 8,
-    pedone(Pedone),
-    bianco(Pedone),
-    occupata(pos(Riga, Colonna), Pedone),
     RigaSopra is Riga + 1,
     ColonnaSx is Colonna - 1,
     nero(X),
     occupata(pos(RigaSopra, ColonnaSx), X).
 
 %* Re Nero
-applicabile(su, Re, pos(Riga, Colonna), _) :-
-    Riga < 8,
+applicabile(su, Re, pos(Riga, Colonna), N) :-
     re(Re),
     nero(Re),
+    N=1,
+    Riga < 8,
     RigaSopra is Riga + 1,
+    no_check(pos(RigaSopra, Colonna)),
     occupata(pos(Riga, Colonna), Re),
     \+ occupata(pos(RigaSopra, Colonna), _).
 
-applicabile(giu, Re, pos(Riga, Colonna), _) :-
-    Riga > 1,
+applicabile(giu, Re, pos(Riga, Colonna), N) :-
     re(Re),
     nero(Re),
+    N=1, 
+    Riga > 1,
     RigaSotto is Riga - 1,
+    no_check(pos(RigaSotto, Colonna)),
     occupata(pos(Riga, Colonna), Re),
     \+ occupata(pos(RigaSotto, Colonna), _).
 
-applicabile(dx, Re, pos(Riga, Colonna), _) :-
-    Colonna < 8,
+applicabile(dx, Re, pos(Riga, Colonna), N) :-
     re(Re),
     nero(Re),
+    N=1,
+    Colonna < 8,
     ColonnaDestra is Colonna + 1,
+    no_check(pos(Riga, ColonnaDestra)),
     occupata(pos(Riga, Colonna), Re),
     \+ occupata(pos(Riga, ColonnaDestra), _).
 
-applicabile(sx, Re, pos(Riga, Colonna), _) :-
-    Colonna > 1,
+applicabile(sx, Re, pos(Riga, Colonna), N) :-
     re(Re),
     nero(Re),
+    N=1,
+    Colonna > 1,
     ColonnaSinistra is Colonna - 1,
+    no_check(pos(Riga, ColonnaSinistra)),
     occupata(pos(Riga, Colonna), Re),
     \+ occupata(pos(Riga, ColonnaSinistra), _).
 
@@ -67,25 +69,22 @@ applicabile(sx, Re, pos(Riga, Colonna), _) :-
 %Controllo se la torre può spostarsi a destra di N caselle, utilizzo 
 %il metodo continua_riga per controllare ricorsivamente se le righe sono occupate
 applicabile(su, Torre, pos(Riga, Colonna), N) :-
-    Riga < 8,
     torre(Torre),
-    occupata(pos(Riga, Colonna), Torre),
+    Riga < 8,
     continua_riga(Torre, pos(Riga, Colonna), N).
 
 %Controllo se la torre può spostarsi a destra di N caselle, utilizzo 
 %il metodo continua_colonna_dx per controllare ricorsivamente se le colonne sono occupate
 applicabile(dx, Torre, pos(Riga, Colonna), N) :-
-    Colonna < 8,
     torre(Torre),
-    occupata(pos(Riga, Colonna), Torre),
+    Colonna < 8,
     continua_colonna_dx(Torre, pos(Riga, Colonna), N).
 
 %Esattamente come sopra, solo che controllo a sx. Mi disturba avere un metodo
 %continua_colonna diverso, ma per ora mi è sembrato necessario%
 applicabile(sx, Torre, pos(Riga, Colonna), N) :-
-    Colonna > 1 ,
     torre(Torre),
-    occupata(pos(Riga, Colonna), Torre),
+    Colonna > 1 ,
     continua_colonna_sx(Torre, pos(Riga, Colonna), N).
 
 continua_colonna_sx(_, pos(_, _), N) :-
@@ -121,6 +120,7 @@ continua_riga(Torre, pos(Riga, Colonna), N) :-
 %* Pedone
 trasforma(mangiadx, Pedone, pos(Riga, Colonna),N) :-
     pedone(Pedone),
+    N=1,
     RigaSopra is Riga + N,
     ColonnaDx is Colonna + N,
     retract(occupata(pos(RigaSopra, ColonnaDx), _)),
@@ -129,14 +129,16 @@ trasforma(mangiadx, Pedone, pos(Riga, Colonna),N) :-
 
 trasforma(mangiasx, Pedone, pos(Riga, Colonna),N) :-
     pedone(Pedone),
+    N=1,
     RigaSopra is Riga + N,
     ColonnaSx is Colonna - N,
     retract(occupata(pos(RigaSopra, ColonnaSx), _)),
     assert(occupata(pos(RigaSopra, ColonnaSx), Pedone)),
     retract(occupata(pos(Riga, Colonna), Pedone)).
 
-trasforma(su, Pedone, pos(Riga, Colonna),_) :-
+trasforma(su, Pedone, pos(Riga, Colonna),N) :-
     pedone(Pedone),
+    N=1,
     RigaSopra is Riga + 1,
     retract(occupata(pos(Riga, Colonna), Pedone)),
     assert(occupata(pos(RigaSopra, Colonna), Pedone)).
@@ -171,14 +173,14 @@ trasforma(giu, Re, pos(Riga, Colonna), _) :-
     retract(occupata(pos(Riga, Colonna), Re)),
     assert(occupata(pos(RigaSotto, Colonna), Re)).
 
-trasforma(destra, Re, pos(Riga, Colonna), _) :-
+trasforma(dx, Re, pos(Riga, Colonna), _) :-
     re(Re),
     nero(Re),
     ColonnaDestra is Colonna + 1,
     retract(occupata(pos(Riga, Colonna), Re)),
     assert(occupata(pos(Riga, ColonnaDestra), Re)).
 
-trasforma(sinistra, Re, pos(Riga, Colonna), _) :-
+trasforma(sx, Re, pos(Riga, Colonna), _) :-
     re(Re),
     nero(Re),
     ColonnaSinistra is Colonna - 1,

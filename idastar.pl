@@ -1,3 +1,7 @@
+gioca(N,M):-
+    prova_bianco(N),
+    prova_nero(M).
+
 prova_bianco(N):-
     risolvi_bianco(N).
 
@@ -15,7 +19,8 @@ risolvi_bianco(N):-
     write(AzBianco),write("---"), write(PezzoBianco),write("---"), write(N), write("\n"), !. % usa la prima mossa trovata che dà scacco
     
 prova_nero(N) :-
-    risolvi_nero(N).
+    risolvi_nero(N),
+    gioca(1,1).
 
 prova_nero(N) :-
     NNuovo is N+1,

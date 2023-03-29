@@ -16,8 +16,9 @@ risolvi_bianco(N):-
     applicabile(AzBianco, PezzoBianco, pos(XBianco,YBianco), N),
     check(PezzoBianco, pos(XBianco,YBianco), N),
     trasforma(AzBianco, PezzoBianco, pos(XBianco,YBianco), N),
-    write(AzBianco),write("---"), write(PezzoBianco),write("---"), write(N), write("\n"), !. % usa la prima mossa trovata che dà scacco
-    
+    tell('game.txt'),
+    write((XBianco, YBianco)),write("-"), write(AzBianco), write("-"), write(N),write("\n"),!.
+
 prova_nero(N) :-
     risolvi_nero(N),
     gioca(1,1).
@@ -28,7 +29,8 @@ prova_nero(N) :-
     prova_nero(NNuovo).
 
 prova_nero(_) :-
-    write("Scaccomatto!").
+    write("Scaccomatto!"),
+    told.
 
 risolvi_nero(N) :-
     nero(PezzoNero),
@@ -36,4 +38,5 @@ risolvi_nero(N) :-
     occupata(pos(XNero,YNero), PezzoNero),
     applicabile(AzNero, PezzoNero, pos(XNero,YNero), N), %pezzoBianco
     trasforma(AzNero, PezzoNero, pos(XNero,YNero), N),
-    write(AzNero),write("---"), write(N), write("---"), write("no check motherfuckers"), write("\n").
+    tell('game.txt'),
+    write((XNero, YNero)),write("-"), write(AzNero), write("-"), write(N), write("\n"),!.
